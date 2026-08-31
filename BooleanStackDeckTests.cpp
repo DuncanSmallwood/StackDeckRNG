@@ -6,11 +6,11 @@
 #include <string>
 #include <iostream>
 
-class BooleanStackDeckTests {
+class BooleanStackDeckTest {
 	public:
 		std::vector<TestUtilities::TestResult (*)()> tests;
 	
-		BooleanStackDeckTests(const bool& showDebugs){
+		BooleanStackDeckTest(const bool& showDebugs){
 			BooleanStackDeck::debug = showDebugs;
 			tests.push_back(testDecimalConstructor);
 			tests.push_back(testPercentageConstructor);

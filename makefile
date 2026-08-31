@@ -4,8 +4,11 @@ Tests: BooleanStackDeck.o TestResults.o BooleanStackDeckTests.cpp Tests.cpp
 TestResults.o: TestResults.h TestResults.cpp
 	g++ -c TestResults.cpp
 
-BooleanStackDeck.o: BooleanStackDeck.cpp BooleanStackDeck.h
-	g++ -c BooleanStackDeck.cpp
+BooleanStackDeck.o: BooleanStackDeck.cpp BooleanStackDeck.h StackDeck.cpp StackDeck.h
+	g++ -c BooleanStackDeck.cpp StackDeck.cpp
+
+StackDeck.o: StackDeck.h StackDeck.cpp
+	g++ -c StackDeck.cpp
 
 clean:
 	rm *.out *.o

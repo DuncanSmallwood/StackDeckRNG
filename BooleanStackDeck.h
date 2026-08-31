@@ -1,24 +1,14 @@
 #ifndef BooleanStackDeck_h
 #define BooleanStackDeck_h
 #include <vector>
-class BooleanStackDeck {
-	private:
-		std::vector<bool>* currDeck;
-		float yesRate;
-		bool yesRateIsPercentage;
-		int numCards;
-		
+#include "StackDeck.h"
+class BooleanStackDeck : StackDeck<bool> {
 	public:
-		BooleanStackDeck(const float& yesRate);
+		BooleanStackDeck(float yesRate);
+		BooleanStackDeck(float likelyhoodArray[]);
 		bool getNext();
-		void resetDeck();
-		void resetDeck(const float& newYesRate);
+		void resetDeck(float newYesRate);
 	
 		friend class BooleanStackDeckTests;
-		inline static bool debug = false;
-	
-	private:
-		bool checkIfYesRateIsPercentage(const float& yesRate);
-		unsigned int findDeckSize(const float& yesRate);
 };
 #endif
