@@ -14,11 +14,9 @@ class BooleanStackDeckTests {
 		BooleanStackDeckTests(bool showDebugs){
 			StackDeckTests::debug<bool>(showDebugs);
 			tests.push_back(testDecimalConstructor);
-			/*
 			tests.push_back(testPercentageConstructor);
-			tests.push_back(testDeckYesRate);
 			tests.push_back(test0SuccessConstructor);
-			*/
+			tests.push_back(testDeckYesRate);
 		}
 		
 		static TestUtilities::TestResult testDecimalConstructor(){
@@ -30,6 +28,7 @@ class BooleanStackDeckTests {
 			testResult += TestUtilities::assertEqual<int>(100, StackDeckTests::numCards(*testDeck));
 			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
 			testResult += TestUtilities::assertEqual<float>(0.38f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
+			testResult += TestUtilities::assertEqual<float>(0.62f, StackDeckTests::possibilitiesMap(*testDeck).at(false));
 			int yesCards = 0;
 			int noCards = 0;
 			for (bool card : StackDeckTests::currDeck(*testDeck)){
@@ -45,20 +44,21 @@ class BooleanStackDeckTests {
 			testDeck = nullptr;
 			return testResult;
 		}
-		/*
+		
 		static TestUtilities::TestResult testPercentageConstructor(){
-			if(BooleanStackDeck::debug)
+			if(StackDeckTests::debug<bool>())
 				std::cout << "testPercentageConstructor() debugs:" << std::endl;
 			BooleanStackDeck* testDeck = new BooleanStackDeck(38.4f);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("testPercentageConstructor()");
 			
-			testResult += TestUtilities::assertEqual<int>(1000, testDeck->numCards);
-			testResult += TestUtilities::assertEqual<int>(testDeck->numCards, testDeck->currDeck->size());
-			testResult += TestUtilities::assertEqual<float>(38.4f, testDeck->yesRate);
+			testResult += TestUtilities::assertEqual<int>(1000, StackDeckTests::numCards(*testDeck));
+			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
+			testResult += TestUtilities::assertEqual<float>(38.4f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
+			testResult += TestUtilities::assertEqual<float>(61.6f, StackDeckTests::possibilitiesMap(*testDeck).at(false));
 			int yesCards = 0;
 			int noCards = 0;
-			for (std::vector<bool>::iterator card = testDeck->currDeck->begin(); card != testDeck->currDeck->end(); ++card){
-				if (*card)
+			for (bool card : StackDeckTests::currDeck(*testDeck)){
+				if (card)
 					++yesCards;
 				else
 					++noCards;
@@ -77,9 +77,10 @@ class BooleanStackDeckTests {
 			BooleanStackDeck* testDeck = new BooleanStackDeck(0);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("test0SuccessConstructor()");
 			
-			testResult += TestUtilities::assertEqual<int>(1, testDeck->numCards);
-			testResult += TestUtilities::assertEqual<int>(testDeck->numCards, testDeck->currDeck->size());
-			testResult += TestUtilities::assertEqual<float>(0.0f, testDeck->yesRate);
+			testResult += TestUtilities::assertEqual<int>(1, StackDeckTests::numCards(*testDeck));
+			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
+			testResult += TestUtilities::assertEqual<float>(0.0f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
+			testResult += TestUtilities::assertEqual<float>(1.0f, StackDeckTests::possibilitiesMap(*testDeck).at(false));
 			
 			delete testDeck;
 			testDeck = nullptr;
@@ -92,13 +93,14 @@ class BooleanStackDeckTests {
 			BooleanStackDeck* testDeck = new BooleanStackDeck(0.536);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("testDeckYesRate()");
 			
-			testResult += TestUtilities::assertEqual<int>(1000, testDeck->numCards);
-			testResult += TestUtilities::assertEqual<float>(0.536f, testDeck->yesRate);
+			testResult += TestUtilities::assertEqual<int>(1000, StackDeckTests::numCards(*testDeck));
+			testResult += TestUtilities::assertEqual<float>(0.536f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
+			testResult += TestUtilities::assertEqual<float>(0.464f, StackDeckTests::possibilitiesMap(*testDeck).at(false));
 			
 			int noRate = 0;
 			int yesRate = 0;
-			for (std::vector<bool>::const_iterator card = StackDeckTests<bool>::currDeck(testDeck).begin(); card != StackDeckTests<bool>::currDeck(testDeck).end(); ++card){
-				if(*card)
+			for (bool card : StackDeckTests::currDeck(*testDeck)){
+				if(card)
 					++yesRate;
 				else
 					++noRate;
@@ -113,7 +115,6 @@ class BooleanStackDeckTests {
 			testDeck = nullptr;
 			return testResult;
 		}
-		*/
 };
 
 #endif
