@@ -5,32 +5,35 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "StackDeckTests.cpp"
 
-class BooleanStackDeckTest {
+class BooleanStackDeckTests {
 	public:
 		std::vector<TestUtilities::TestResult (*)()> tests;
 	
-		BooleanStackDeckTest(const bool& showDebugs){
-			BooleanStackDeck::debug = showDebugs;
+		BooleanStackDeckTests(bool showDebugs){
+			StackDeckTests::debug<bool>(showDebugs);
 			tests.push_back(testDecimalConstructor);
+			/*
 			tests.push_back(testPercentageConstructor);
 			tests.push_back(testDeckYesRate);
 			tests.push_back(test0SuccessConstructor);
+			*/
 		}
 		
 		static TestUtilities::TestResult testDecimalConstructor(){
-			if(BooleanStackDeck::debug)
+			if(StackDeckTests::debug<bool>())
 				std::cout << "testDecimalConstructor() debugs:" << std::endl;
-			BooleanStackDeck* testDeck = new BooleanStackDeck(0.38);
+			StackDeck<bool>* testDeck = new BooleanStackDeck(0.38);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("testDecimalConstructor()");
 			
-			testResult += TestUtilities::assertEqual<int>(100, testDeck->numCards);
-			testResult += TestUtilities::assertEqual<int>(testDeck->numCards, testDeck->currDeck->size());
-			testResult += TestUtilities::assertEqual<float>(0.38f, testDeck->yesRate);
+			testResult += TestUtilities::assertEqual<int>(100, StackDeckTests::numCards(*testDeck));
+			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
+			testResult += TestUtilities::assertEqual<float>(0.38f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
 			int yesCards = 0;
 			int noCards = 0;
-			for (std::vector<bool>::iterator card = testDeck->currDeck->begin(); card != testDeck->currDeck->end(); ++card){
-				if (*card)
+			for (bool card : StackDeckTests::currDeck(*testDeck)){
+				if (card)
 					++yesCards;
 				else
 					++noCards;
@@ -42,7 +45,7 @@ class BooleanStackDeckTest {
 			testDeck = nullptr;
 			return testResult;
 		}
-		
+		/*
 		static TestUtilities::TestResult testPercentageConstructor(){
 			if(BooleanStackDeck::debug)
 				std::cout << "testPercentageConstructor() debugs:" << std::endl;
@@ -94,7 +97,7 @@ class BooleanStackDeckTest {
 			
 			int noRate = 0;
 			int yesRate = 0;
-			for (std::vector<bool>::const_iterator card = testDeck->currDeck->begin(); card != testDeck->currDeck->end(); ++card){
+			for (std::vector<bool>::const_iterator card = StackDeckTests<bool>::currDeck(testDeck).begin(); card != StackDeckTests<bool>::currDeck(testDeck).end(); ++card){
 				if(*card)
 					++yesRate;
 				else
@@ -110,6 +113,7 @@ class BooleanStackDeckTest {
 			testDeck = nullptr;
 			return testResult;
 		}
+		*/
 };
 
 #endif

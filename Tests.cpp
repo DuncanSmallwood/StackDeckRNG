@@ -13,7 +13,7 @@ int main(int argc, char *argb[]){
 			showDebug = true;
 	}
 	std::cout << showDebug << std::endl;
-	StackDeckTest testClass(showDebug);
+	BooleanStackDeckTests testClass(showDebug);
 	
 	for(std::vector<TestUtilities::TestResult (*)()>::iterator tests = testClass.tests.begin(); tests != testClass.tests.end(); ++tests){
 		std::cout << (*tests)() << std::endl;
