@@ -31,5 +31,11 @@ class StackDeckTests {
 		static unsigned int numCards(const StackDeck<T>& deck){
 			return deck.numCards;
 		}
+		template <typename T>
+		static void waitForDeckReset(const StackDeck<T>& deck){
+			if (deck.deckResetterThread){
+				deck.deckResetterThread->join();
+			}
+		}
 };
 #endif

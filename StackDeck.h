@@ -2,6 +2,7 @@
 #define StackDeck_h
 #include <vector>
 #include <map>
+#include <thread>
 
 template<typename T> class StackDeck {
 	private:
@@ -9,6 +10,7 @@ template<typename T> class StackDeck {
 		std::map<T, float> *possibilitiesMap;
 		std::map<T, bool> *isPercentageMap;
 		unsigned int numCards;
+		std::thread *deckResetterThread;
 	
 	public:
 		StackDeck(std::vector<T> possibilities, std::vector<float> likelyhoodArray);
@@ -33,4 +35,5 @@ template<typename T> class StackDeck {
 	
 	friend class StackDeckTests;
 };
+#include "StackDeck.hpp"
 #endif

@@ -1,14 +1,11 @@
-Tests: StackDeck.o BooleanStackDeck.o TestResults.o BooleanStackDeckTests.cpp StackDeck.cpp StackDeck.h Tests.cpp 
-	g++ Tests.cpp BooleanStackDeck.o TestResults.o -o BooleanStackDeckTest.out
+Tests: BooleanStackDeck.so TestResults.o BooleanStackDeckTests.cpp Tests.cpp 
+	g++ Tests.cpp TestResults.o -L. -lBooleanStackDeck -o BooleanStackDeckTest.out
 
 TestResults.o: TestResults.h TestResults.cpp
 	g++ -c TestResults.cpp
 
-BooleanStackDeck.o: BooleanStackDeck.cpp BooleanStackDeck.h StackDeck.o
-	g++ -c BooleanStackDeck.cpp
-
-StackDeck.o: StackDeck.h StackDeck.cpp StackDeck_impl.cpp
-	g++ -c StackDeck_impl.cpp -o StackDeck.o
+BooleanStackDeck.so: BooleanStackDeck.cpp BooleanStackDeck.h StackDeck.h StackDeck.hpp
+	g++ -c -fPIC BooleanStackDeck.cpp -o libBooleanStackDeck.so
 
 clean:
-	rm *.out *.o *.gch
+	rm *.out *.o *.gch *.so*

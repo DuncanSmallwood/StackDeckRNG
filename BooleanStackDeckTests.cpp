@@ -25,6 +25,8 @@ class BooleanStackDeckTests {
 			StackDeck<bool>* testDeck = new BooleanStackDeck(0.38);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("testDecimalConstructor()");
 			
+			StackDeckTests::waitForDeckReset(*testDeck);
+			
 			testResult += TestUtilities::assertEqual<int>(100, StackDeckTests::numCards(*testDeck));
 			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
 			testResult += TestUtilities::assertEqual<float>(0.38f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
@@ -50,6 +52,8 @@ class BooleanStackDeckTests {
 				std::cout << "testPercentageConstructor() debugs:" << std::endl;
 			BooleanStackDeck* testDeck = new BooleanStackDeck(38.4f);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("testPercentageConstructor()");
+			
+			StackDeckTests::waitForDeckReset(*testDeck);
 			
 			testResult += TestUtilities::assertEqual<int>(1000, StackDeckTests::numCards(*testDeck));
 			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
@@ -77,6 +81,8 @@ class BooleanStackDeckTests {
 			BooleanStackDeck* testDeck = new BooleanStackDeck(0);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("test0SuccessConstructor()");
 			
+			StackDeckTests::waitForDeckReset(*testDeck);
+			
 			testResult += TestUtilities::assertEqual<int>(1, StackDeckTests::numCards(*testDeck));
 			testResult += TestUtilities::assertEqual<int>(StackDeckTests::numCards(*testDeck), StackDeckTests::currDeck(*testDeck).size());
 			testResult += TestUtilities::assertEqual<float>(0.0f, StackDeckTests::possibilitiesMap(*testDeck).at(true));
@@ -92,6 +98,8 @@ class BooleanStackDeckTests {
 				std::cout << "testDeckYesRate() debugs:" << std::endl;
 			BooleanStackDeck* testDeck = new BooleanStackDeck(0.536);
 			TestUtilities::TestResult testResult = TestUtilities::TestResult("testDeckYesRate()");
+			
+			StackDeckTests::waitForDeckReset(*testDeck);
 			
 			testResult += TestUtilities::assertEqual<int>(1000, StackDeckTests::numCards(*testDeck));
 			testResult += TestUtilities::assertEqual<float>(0.536f, StackDeckTests::possibilitiesMap(*testDeck).at(true));

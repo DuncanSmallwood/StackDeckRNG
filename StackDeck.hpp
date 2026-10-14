@@ -1,11 +1,11 @@
 #ifndef StackDeck_cpp
 #define StackDeck_cpp
-#include "StackDeck.h"
 
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <thread>
 
 template <typename T>
 StackDeck<T>::StackDeck(std::vector<T> possibilities, std::vector<float> likelyhoodArray){
@@ -15,7 +15,8 @@ StackDeck<T>::StackDeck(std::vector<T> possibilities, std::vector<float> likelyh
 	this->possibilitiesMap = new std::map<T, float>(constructPossibilitiesMap(possibilities, likelyhoodArray));
 	this->isPercentageMap = new std::map<T, bool>(constructIsPercentageMap(*possibilitiesMap));
 	
-	this->resetDeck();
+	this->deckResetterThread = new std::thread([this]{this->resetDeck();});
+	//this->resetDeck();
 }
 
 template <typename T>
@@ -36,7 +37,9 @@ StackDeck<T>::StackDeck(std::initializer_list<T> possibilityInitializer, std::ve
 	this->possibilitiesMap = new std::map<T, float>(constructPossibilitiesMap(possibilities, likelyhoodArray));
 	this->isPercentageMap = new std::map<T, bool>(constructIsPercentageMap(*possibilitiesMap));
 	
-	this->resetDeck();
+	
+	this->deckResetterThread = new std::thread([this]{this->resetDeck();});
+	//this->resetDeck();
 }
 
 template <typename T>
@@ -59,7 +62,8 @@ StackDeck<T>::StackDeck(std::initializer_list<T> possibilityInitializer, std::in
 	this->possibilitiesMap = new std::map<T, float>(constructPossibilitiesMap(possibilities, likelyhoodArray));
 	this->isPercentageMap = new std::map<T, bool>(constructIsPercentageMap(*possibilitiesMap));
 	
-	this->resetDeck();
+	this->deckResetterThread = new std::thread([this]{this->resetDeck();});
+	//this->resetDeck();
 }
 
 template <typename T>
@@ -70,7 +74,8 @@ StackDeck<T>::StackDeck(std::map<T, float> possibilitiesMap){
 	this->currDeck = new std::vector<T>();
 	this->isPercentageMap = new std::map<T, bool>(constructIsPercentageMap(*(this->possibilitiesMap)));
 	
-	this->resetDeck();
+	this->deckResetterThread = new std::thread([this]{this->resetDeck();});
+	//this->resetDeck();
 }
 
 template <typename T>
@@ -83,26 +88,67 @@ StackDeck<T>::StackDeck(const StackDeck<T>& other){
 
 template <typename T>
 StackDeck<T>::~StackDeck(){
+	if (deckResetterThread) {
+		if(debug){
+			std::cout << "(debug) attempting to delete deckResetterThread, need to wait for it to finish" << std::endl;
+		}
+		if (deckResetterThread->joinable()) {
+			deckResetterThread->join();
+		}
+		if(debug){
+			std::cout << "(debug) deleting deckResetterThread" << std::endl;
+		}
+		delete deckResetterThread;
+		deckResetterThread = nullptr;
+	}
 	if (currDeck) {
+		if(debug){
+			std::cout << "(debug) deleting currDeck" << std::endl;
+		}
 		delete currDeck;
 		currDeck = nullptr;
 	}
 	if (possibilitiesMap) {
+		if(debug){
+			std::cout << "(debug) deleting possibilitiesMap" << std::endl;
+		}
 		delete possibilitiesMap;
 		possibilitiesMap = nullptr;
 	}
 	if (isPercentageMap) {
+		if(debug){
+			std::cout << "(debug) deleting isPercentageMap" << std::endl;
+		}
 		delete isPercentageMap;
 		isPercentageMap = nullptr;
+	}
+	if (deckResetterThread) {
+		if(debug){
+			std::cout << "(debug) attempting to delete deckResetterThread, need to wait for it to finish" << std::endl;
+		}
+		if (deckResetterThread->joinable()) {
+			deckResetterThread->join();
+		}
+		if(debug){
+			std::cout << "(debug) deleting deckResetterThread" << std::endl;
+		}
+		delete deckResetterThread;
+		deckResetterThread = nullptr;
 	}
 }
 
 template <typename T>
 T StackDeck<T>::getNext(){
+	if (deckResetterThread){
+		deckResetterThread->join();
+		delete deckResetterThread;
+		deckResetterThread = nullptr;
+	}
 	T result = currDeck->back();
 	currDeck->pop_back();
 	if(currDeck->empty()){
-		this->resetDeck();
+		this->deckResetterThread = new std::thread([this]{this->resetDeck();});
+		//this->resetDeck();
 	}
 	return result;
 }
@@ -129,15 +175,19 @@ void StackDeck<T>::resetDeck(){
 		std::cout << "\b}" << std::endl;
 	
 	for (int i = 0; i < numCards; ++i){
-		int choose = rand() % (numCards - i);
+		int choose = 1 + rand() % (numCards - i);
 		if(debug)
 			std::cout << i << "---" << std::endl
 			<< "(debug) choosen number: " << choose << std::endl;
 		typename std::map<T,unsigned int>::iterator cardIterator = cardsPerPossibilityMap->begin();
 		int sum = cardIterator->second;
-		while (choose >= sum && cardIterator != cardsPerPossibilityMap->end()/*shouldn't be relavant*/){
-			sum += cardIterator->second;
+		if(debug)
+			std::cout << "-- pre sum: " << sum << "(" << cardIterator->first << ")" <<  std::endl;
+		while (choose > sum && cardIterator != cardsPerPossibilityMap->end()/*shouldn't be relavant*/){
 			++cardIterator;
+			sum += cardIterator->second;
+			if(debug)
+				std::cout << "--sum for " << cardIterator->first << ": " << sum << std::endl;
 		}
 		if(debug)
 			std::cout << "(debug) card to place: " << cardIterator->first << std::endl;

@@ -1,7 +1,7 @@
 #ifndef BooleanStackDeck_h
 #define BooleanStackDeck_h
 #include <vector>
-#include "StackDeck_impl.cpp"
+#include "StackDeck.h"
 class BooleanStackDeck : StackDeck<bool> {
 	public:
 		BooleanStackDeck(float yesRate);
